@@ -1,19 +1,19 @@
 diff --git a/configure.ac b/configure.ac
-index 3717abc..5e497e6 100644
+index cb42ed6..ef8e0fb 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1772,7 +1772,7 @@ if test "${HAVE_NS}" = yes; then
+@@ -1816,7 +1816,7 @@ if test "${HAVE_NS}" = yes; then
       INSTALL_ARCH_INDEP_EXTRA=
    fi
  
--  NS_OBJC_OBJ="nsterm.o nsfns.o nsmenu.o nsselect.o nsimage.o nsfont.o $macfont_file"
-+  NS_OBJC_OBJ="nsterm.o nsfns.o nsmenu.o nsselect.o nsimage.o nsfont.o macim.o $macfont_file"
+-  NS_OBJC_OBJ="nsterm.o nsfns.o nsmenu.o nsselect.o nsimage.o $ns_fontfile"
++  NS_OBJC_OBJ="nsterm.o nsfns.o nsmenu.o nsselect.o nsimage.o macim.o $ns_fontfile"
  fi
  CFLAGS="$tmp_CFLAGS"
  CPPFLAGS="$tmp_CPPFLAGS"
-@@ -4752,7 +4752,7 @@ case "$opsys" in
-    ## 0x690 is the total size of 30 segment load commands (at 56
-    ## each); under Cocoa 31 commands are required.
+@@ -4880,7 +4880,7 @@ case "$opsys" in
+    ## only costs about 1.5K of wasted binary space.
+    headerpad_extra=1000
     if test "$HAVE_NS" = "yes"; then
 -     libs_nsgui="-framework AppKit"
 +     libs_nsgui="-framework AppKit -framework Carbon -framework Cocoa"
