@@ -1,8 +1,8 @@
 diff --git a/configure.ac b/configure.ac
-index cb42ed6..ef8e0fb 100644
+index 16d4484..82757d8 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1816,7 +1816,7 @@ if test "${HAVE_NS}" = yes; then
+@@ -1877,7 +1877,7 @@ if test "${HAVE_NS}" = yes; then
       INSTALL_ARCH_INDEP_EXTRA=
    fi
  
@@ -11,7 +11,7 @@ index cb42ed6..ef8e0fb 100644
  fi
  CFLAGS="$tmp_CFLAGS"
  CPPFLAGS="$tmp_CPPFLAGS"
-@@ -4880,7 +4880,7 @@ case "$opsys" in
+@@ -4992,7 +4992,7 @@ case "$opsys" in
     ## only costs about 1.5K of wasted binary space.
     headerpad_extra=1000
     if test "$HAVE_NS" = "yes"; then
@@ -21,10 +21,10 @@ index cb42ed6..ef8e0fb 100644
          libs_nsgui="$libs_nsgui -framework IOKit"
       fi
 diff --git a/lisp/term/common-win.el b/lisp/term/common-win.el
-index ba59c75..90f52c0 100644
+index 98ad5ac..fbfec4f 100644
 --- a/lisp/term/common-win.el
 +++ b/lisp/term/common-win.el
-@@ -136,6 +136,7 @@ is not used)."
+@@ -73,6 +73,7 @@
  	       (cons (logior (lsh 0 16)  12) 'ns-new-frame)
  	       (cons (logior (lsh 0 16)  13) 'ns-toggle-toolbar)
  	       (cons (logior (lsh 0 16)  14) 'ns-show-prefs)
@@ -33,7 +33,7 @@ index ba59c75..90f52c0 100644
      (set-terminal-parameter frame 'x-setup-function-keys t)))
  
 diff --git a/lisp/term/ns-win.el b/lisp/term/ns-win.el
-index 47d953a..e58aa7b 100644
+index a21c105..54d8e11 100644
 --- a/lisp/term/ns-win.el
 +++ b/lisp/term/ns-win.el
 @@ -168,6 +168,7 @@ The properties returned may include `top', `left', `height', and `width'."
@@ -202,9 +202,9 @@ index 47d953a..e58aa7b 100644
    (cond
     ((and (overlayp ns-working-overlay)
           ;; Still alive?
-@@ -964,6 +1046,466 @@ See the documentation of `create-fontset-from-fontset-spec' for the format.")
- (add-to-list 'window-system-initialization-alist '(ns . ns-initialize-window-system))
- 
+@@ -951,6 +1033,466 @@ See the documentation of `create-fontset-from-fontset-spec' for the format.")
+                                          &context (window-system (eql ns)))
+   (ns-get-selection selection-symbol target-type))
  
 +;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 +;;
@@ -670,10 +670,10 @@ index 47d953a..e58aa7b 100644
  
  ;;; ns-win.el ends here
 diff --git a/src/Makefile.in b/src/Makefile.in
-index 3889235..fe34193 100644
+index 1fb770d..9ad6fca 100644
 --- a/src/Makefile.in
 +++ b/src/Makefile.in
-@@ -367,8 +367,8 @@ obj = $(base_obj) $(NS_OBJC_OBJ)
+@@ -393,8 +393,8 @@ obj = $(base_obj) $(NS_OBJC_OBJ)
  SOME_MACHINE_OBJECTS = dosfns.o msdos.o \
    xterm.o xfns.o xmenu.o xselect.o xrdb.o xsmfns.o fringe.o image.o \
    fontset.o dbusbind.o cygw32.o \
@@ -685,22 +685,22 @@ index 3889235..fe34193 100644
    w16select.o widget.o xfont.o ftfont.o xftfont.o ftxfont.o gtkutil.o \
    xsettings.o xgselect.o termcap.o
 diff --git a/src/keyboard.c b/src/keyboard.c
-index 678cf5a..210a7d2 100644
+index 6f626b7..900efbb 100644
 --- a/src/keyboard.c
 +++ b/src/keyboard.c
-@@ -3962,8 +3962,10 @@ kbd_buffer_get_event (KBOARD **kbp,
+@@ -3998,8 +3998,10 @@ kbd_buffer_get_event (KBOARD **kbp,
          {
-           if (event->code == KEY_NS_PUT_WORKING_TEXT)
+           if (event->ie.code == KEY_NS_PUT_WORKING_TEXT)
              obj = list1 (intern ("ns-put-working-text"));
 -          else
-+          else if (event->code == KEY_NS_UNPUT_WORKING_TEXT)
++          else if (event->ie.code == KEY_NS_UNPUT_WORKING_TEXT)
              obj = list1 (intern ("ns-unput-working-text"));
-+	  else if (event->code == KEY_NS_PUT_MARKED_TEXT)
-+	    obj = Fcons (intern ("ns-put-marked-text"), event->arg);
++	  else if (event->ie.code == KEY_NS_PUT_MARKED_TEXT)
++	    obj = Fcons (intern ("ns-put-marked-text"), event->ie.arg);
  	  kbd_fetch_ptr = event + 1;
            if (used_mouse_menu)
              *used_mouse_menu = 1;
-@@ -11693,6 +11695,8 @@ keys_of_keyboard (void)
+@@ -11886,6 +11888,8 @@ keys_of_keyboard (void)
  			    "ns-put-working-text");
    initial_define_lispy_key (Vspecial_event_map, "ns-unput-working-text",
  			    "ns-unput-working-text");
@@ -889,10 +889,10 @@ index 0000000..fa4670b
 +}
 +#endif
 diff --git a/src/nsfns.m b/src/nsfns.m
-index 4c3f7f3..beb15c1 100644
+index 0fc867c..5285b38 100644
 --- a/src/nsfns.m
 +++ b/src/nsfns.m
-@@ -546,7 +546,6 @@ x_set_title (struct frame *f, Lisp_Object name, Lisp_Object old_name)
+@@ -525,7 +525,6 @@ x_set_title (struct frame *f, Lisp_Object name, Lisp_Object old_name)
    ns_set_name_internal (f, name);
  }
  
@@ -900,7 +900,7 @@ index 4c3f7f3..beb15c1 100644
  void
  ns_set_name_as_filename (struct frame *f)
  {
-@@ -2944,6 +2943,24 @@ be used as the image of the icon representing the frame.  */);
+@@ -3087,6 +3086,24 @@ be used as the image of the icon representing the frame.  */);
                 doc: /* Toolkit version for NS Windowing.  */);
    Vns_version_string = ns_appkit_version_str ();
  
@@ -925,7 +925,7 @@ index 4c3f7f3..beb15c1 100644
    defsubr (&Sns_read_file_name);
    defsubr (&Sns_get_resource);
    defsubr (&Sns_set_resource);
-@@ -2987,6 +3004,10 @@ be used as the image of the icon representing the frame.  */);
+@@ -3131,6 +3148,10 @@ be used as the image of the icon representing the frame.  */);
    defsubr (&Sx_show_tip);
    defsubr (&Sx_hide_tip);
  
@@ -937,10 +937,10 @@ index 4c3f7f3..beb15c1 100644
    as_script = Qnil;
    as_result = 0;
 diff --git a/src/nsterm.h b/src/nsterm.h
-index 7478963..d4e3b0b 100644
+index c06b7c4..ae98ec4 100644
 --- a/src/nsterm.h
 +++ b/src/nsterm.h
-@@ -482,6 +482,8 @@ extern EmacsMenu *mainMenu, *svcsMenu, *dockMenu;
+@@ -455,6 +455,8 @@ extern EmacsMenu *mainMenu, *svcsMenu, *dockMenu;
  #define KEY_NS_NEW_FRAME               ((1<<28)|(0<<16)|12)
  #define KEY_NS_TOGGLE_TOOLBAR          ((1<<28)|(0<<16)|13)
  #define KEY_NS_SHOW_PREFS              ((1<<28)|(0<<16)|14)
@@ -950,10 +950,10 @@ index 7478963..d4e3b0b 100644
  /* could use list to store these, but rest of emacs has a big infrastructure
     for managing a table of bitmap "records" */
 diff --git a/src/nsterm.m b/src/nsterm.m
-index 842ff19..d699cd7 100644
+index 2806f31..2c22ec3 100644
 --- a/src/nsterm.m
 +++ b/src/nsterm.m
-@@ -4252,6 +4252,9 @@ ns_term_init (Lisp_Object display_name)
+@@ -4400,6 +4400,9 @@ ns_term_init (Lisp_Object display_name)
    /*   [[NSNotificationCenter defaultCenter] addObserver: NSApp
                                           selector: @selector (logNotification:)
                                               name: nil object: nil]; */
@@ -963,7 +963,7 @@ index 842ff19..d699cd7 100644
  
    dpyinfo = xzalloc (sizeof *dpyinfo);
  
-@@ -4519,6 +4522,21 @@ ns_term_shutdown (int sig)
+@@ -4678,6 +4681,21 @@ ns_term_shutdown (int sig)
      NSLog (@"notification: '%@'", [notification name]);
  }
  
@@ -985,7 +985,7 @@ index 842ff19..d699cd7 100644
  
  - (void)sendEvent: (NSEvent *)theEvent
  /* --------------------------------------------------------------------------
-@@ -5272,7 +5290,8 @@ not_in_argv (NSString *arg)
+@@ -5484,7 +5502,8 @@ not_in_argv (NSString *arg)
               code, fnKeysym, flags, emacs_event->modifiers);
  
        /* if it was a function key or had modifiers, pass it directly to emacs */
@@ -995,7 +995,7 @@ index 842ff19..d699cd7 100644
                         && (emacs_event->modifiers != shift_modifier)
                         && [[theEvent charactersIgnoringModifiers] length] > 0))
  /*[[theEvent characters] length] */
-@@ -5287,9 +5306,19 @@ not_in_argv (NSString *arg)
+@@ -5499,9 +5518,19 @@ not_in_argv (NSString *arg)
                ? MULTIBYTE_CHAR_KEYSTROKE_EVENT : ASCII_KEYSTROKE_EVENT;
  
            emacs_event->code = code;
@@ -1018,7 +1018,7 @@ index 842ff19..d699cd7 100644
          }
      }
  
-@@ -5389,10 +5418,19 @@ not_in_argv (NSString *arg)
+@@ -5589,10 +5618,19 @@ not_in_argv (NSString *arg)
             (unsigned long)selRange.length,
             (unsigned long)selRange.location);
  
@@ -1041,7 +1041,7 @@ index 842ff19..d699cd7 100644
  
    if (!emacs_event)
      return;
-@@ -5402,7 +5440,9 @@ not_in_argv (NSString *arg)
+@@ -5602,7 +5640,9 @@ not_in_argv (NSString *arg)
    ns_working_text = build_string ([workingText UTF8String]);
  
    emacs_event->kind = NS_TEXT_EVENT;
@@ -1052,7 +1052,7 @@ index 842ff19..d699cd7 100644
    EV_TRAILER ((id)nil);
  }
  
-@@ -5457,15 +5497,23 @@ not_in_argv (NSString *arg)
+@@ -5657,15 +5697,23 @@ not_in_argv (NSString *arg)
  {
    NSRect rect;
    NSPoint pt;
@@ -1078,7 +1078,7 @@ index 842ff19..d699cd7 100644
  
    pt = [self convertPoint: pt toView: nil];
    pt = [[self window] convertBaseToScreen: pt];
-@@ -7731,6 +7779,10 @@ variable `x-use-underline-position-properties', which is usually at the
+@@ -7958,6 +8006,10 @@ variable `x-use-underline-position-properties', which is usually at the
  baseline level.  The default value is nil.  */);
    x_underline_at_descent_line = 0;
  
@@ -1090,10 +1090,10 @@ index 842ff19..d699cd7 100644
    Fprovide (Qns, Qnil);
  
 diff --git a/src/termhooks.h b/src/termhooks.h
-index 708351d..d4c11cb 100644
+index 168bc35..b97e0e4 100644
 --- a/src/termhooks.h
 +++ b/src/termhooks.h
-@@ -49,6 +49,7 @@ enum output_method
+@@ -56,6 +56,7 @@ enum output_method
    output_x_window,
    output_msdos_raw,
    output_w32,
