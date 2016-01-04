@@ -1,7 +1,7 @@
 emacs-inline-patch
 ==================
 
-Japanese inline-patch for Emacs 25.0+ .
+Japanese inline-patch for Emacs 25.1+ .
 This patch is EXPERIMENTAL and not work all well.
 
 ## Original inline-patch
