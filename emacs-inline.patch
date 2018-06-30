@@ -1,8 +1,8 @@
 diff --git a/configure.ac b/configure.ac
-index 2baafb9..be3bd1d 100644
+index a11abc1b65..8574e8bd8c 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1893,7 +1893,7 @@ if test "${HAVE_NS}" = yes; then
+@@ -2009,7 +2009,7 @@ AC_DEFUN
       INSTALL_ARCH_INDEP_EXTRA=
    fi
  
@@ -11,17 +11,17 @@ index 2baafb9..be3bd1d 100644
  fi
  CFLAGS="$tmp_CFLAGS"
  CPPFLAGS="$tmp_CPPFLAGS"
-@@ -5095,7 +5095,7 @@ case "$opsys" in
+@@ -5270,7 +5270,7 @@ AC_DEFUN
     ## only costs about 1.5K of wasted binary space.
     headerpad_extra=1000
     if test "$HAVE_NS" = "yes"; then
 -     libs_nsgui="-framework AppKit"
 +     libs_nsgui="-framework AppKit -framework Carbon -framework Cocoa"
       if test "$NS_IMPL_COCOA" = "yes"; then
-         libs_nsgui="$libs_nsgui -framework IOKit"
+         libs_nsgui="$libs_nsgui -framework IOKit -framework Carbon"
       fi
 diff --git a/lisp/term/common-win.el b/lisp/term/common-win.el
-index 98ad5ac..fbfec4f 100644
+index 6ef686a996..ba6754144b 100644
 --- a/lisp/term/common-win.el
 +++ b/lisp/term/common-win.el
 @@ -73,6 +73,7 @@ x-setup-function-keys
@@ -33,10 +33,10 @@ index 98ad5ac..fbfec4f 100644
      (set-terminal-parameter frame 'x-setup-function-keys t)))
  
 diff --git a/lisp/term/ns-win.el b/lisp/term/ns-win.el
-index 9bd59fc..bb6a4f1 100644
+index eff8adcd3b..76f66597ac 100644
 --- a/lisp/term/ns-win.el
 +++ b/lisp/term/ns-win.el
-@@ -169,6 +169,7 @@ global-map
+@@ -171,6 +171,7 @@ global-map
  (define-key global-map [ns-new-frame] 'make-frame)
  (define-key global-map [ns-toggle-toolbar] 'ns-toggle-toolbar)
  (define-key global-map [ns-show-prefs] 'customize)
@@ -44,7 +44,7 @@ index 9bd59fc..bb6a4f1 100644
  
  
  ;; Set up a number of aliases and other layers to pretend we're using
-@@ -254,14 +255,30 @@ ns-spi-service-call
+@@ -265,14 +266,30 @@ ns-spi-service-call
  ;; editing window.)
  
  (defface ns-working-text-face
@@ -76,7 +76,7 @@ index 9bd59fc..bb6a4f1 100644
  (defvar ns-working-text)		; nsterm.m
  
  ;; Test if in echo area, based on mac-win.el 2007/08/26 unicode-2.
-@@ -269,17 +286,19 @@ ns-working-text
+@@ -280,17 +297,19 @@ ns-working-text
  (defun ns-in-echo-area ()
    "Whether, for purposes of inserting working composition text, the minibuffer
  is currently being used."
@@ -107,7 +107,7 @@ index 9bd59fc..bb6a4f1 100644
  
  ;; The 'interactive' here stays for subinvocations, so the ns-in-echo-area
  ;; always returns nil for some reason.  If this WASN'T the case, we could
-@@ -288,6 +307,7 @@ ns-in-echo-area
+@@ -299,6 +318,7 @@ ns-in-echo-area
  (defun ns-put-working-text ()
    (interactive)
    (if (ns-in-echo-area) (ns-echo-working-text) (ns-insert-working-text)))
@@ -115,7 +115,7 @@ index 9bd59fc..bb6a4f1 100644
  (defun ns-unput-working-text ()
    (interactive)
    (ns-delete-working-text))
-@@ -309,19 +329,81 @@ ns-insert-working-text
+@@ -320,19 +340,81 @@ ns-insert-working-text
  (defun ns-echo-working-text ()
    "Echo contents of `ns-working-text' in message display area.
  See `ns-insert-working-text'."
@@ -202,7 +202,7 @@ index 9bd59fc..bb6a4f1 100644
    (cond
     ((and (overlayp ns-working-overlay)
           ;; Still alive?
-@@ -935,6 +1017,466 @@ ns-initialized
+@@ -923,6 +1005,566 @@ ns-initialized
                                           &context (window-system ns))
    (ns-get-selection selection-symbol target-type))
  
@@ -466,6 +466,106 @@ index 9bd59fc..bb6a4f1 100644
 +     (title . "半英")
 +     (cursor-color)
 +     (cursor-type))
++    ("com.justsystems.inputmethod.atok26.Roman"
++     (title . "A")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok26.Japanese"
++     (title . "あ")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok26.Japanese.Katakana"
++     (title . "ア")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok26.Japanese.FullWidthRoman"
++     (title . "英")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok26.Japanese.HalfWidthEiji"
++     (title . "半英")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok27.Roman"
++     (title . "A")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok27.Japanese"
++     (title . "あ")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok27.Japanese.Katakana"
++     (title . "ア")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok27.Japanese.FullWidthRoman"
++     (title . "英")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok27.Japanese.HalfWidthEiji"
++     (title . "半英")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok28.Roman"
++     (title . "A")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok28.Japanese"
++     (title . "あ")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok28.Japanese.Katakana"
++     (title . "ア")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok28.Japanese.FullWidthRoman"
++     (title . "英")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok28.Japanese.HalfWidthEiji"
++     (title . "半英")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok29.Roman"
++     (title . "A")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok29.Japanese"
++     (title . "あ")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok29.Japanese.Katakana"
++     (title . "ア")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok29.Japanese.FullWidthRoman"
++     (title . "英")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok29.Japanese.HalfWidthEiji"
++     (title . "半英")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok30.Roman"
++     (title . "A")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok30.Japanese"
++     (title . "あ")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok30.Japanese.Katakana"
++     (title . "ア")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok30.Japanese.FullWidthRoman"
++     (title . "英")
++     (cursor-color)
++     (cursor-type))
++    ("com.justsystems.inputmethod.atok30.Japanese.HalfWidthEiji"
++     (title . "半英")
++     (cursor-color)
++     (cursor-type))
 +    )
 +  "Alist of Mac script code vs parameters for input method on MacOSX.")
 +
@@ -667,40 +767,95 @@ index 9bd59fc..bb6a4f1 100644
 +;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 +
  (provide 'ns-win)
+ (provide 'term/ns-win)
  
- ;;; ns-win.el ends here
 diff --git a/src/Makefile.in b/src/Makefile.in
-index f96ebb2..d52b064 100644
+index 1d23425969..f84818bae6 100644
 --- a/src/Makefile.in
 +++ b/src/Makefile.in
-@@ -400,8 +400,8 @@ obj = $(base_obj) $(NS_OBJC_OBJ)
+@@ -413,7 +413,7 @@ obj =
  SOME_MACHINE_OBJECTS = dosfns.o msdos.o \
    xterm.o xfns.o xmenu.o xselect.o xrdb.o xsmfns.o fringe.o image.o \
    fontset.o dbusbind.o cygw32.o \
 -  nsterm.o nsfns.o nsmenu.o nsselect.o nsimage.o nsfont.o macfont.o \
--  w32.o w32console.o w32fns.o w32heap.o w32inevt.o w32notify.o \
 +  nsterm.o nsfns.o nsmenu.o nsselect.o nsimage.o nsfont.o macfont.o macim.o \
-+  w32.o w32console.o w32fns.o w32heap.o w32inevt.o \
+   w32.o w32console.o w32cygwinx.o w32fns.o w32heap.o w32inevt.o w32notify.o \
    w32menu.o w32proc.o w32reg.o w32select.o w32term.o w32xfns.o \
    w16select.o widget.o xfont.o ftfont.o xftfont.o ftxfont.o gtkutil.o \
-   xsettings.o xgselect.o termcap.o
+diff --git a/src/image.c b/src/image.c
+index 992b225d7b..4abd979479 100644
+--- a/src/image.c
++++ b/src/image.c
+@@ -8272,14 +8272,14 @@ imagemagick_image_p (Lisp_Object object)
+ /* The GIF library also defines DrawRectangle, but its never used in Emacs.
+    Therefore rename the function so it doesn't collide with ImageMagick.  */
+ #define DrawRectangle DrawRectangleGif
+-#include <wand/MagickWand.h>
++#include <MagickWand/MagickWand.h>
+ 
+ /* ImageMagick 6.5.3 through 6.6.5 hid PixelGetMagickColor for some reason.
+    Emacs seems to work fine with the hidden version, so unhide it.  */
+-#include <magick/version.h>
++#include <MagickCore/version.h>
+ #if 0x653 <= MagickLibVersion && MagickLibVersion <= 0x665
+ extern WandExport void PixelGetMagickColor (const PixelWand *,
+-					    MagickPixelPacket *);
++					    PixelInfo *);
+ #endif
+ 
+ /* Log ImageMagick error message.
+@@ -8434,7 +8434,7 @@ imagemagick_compute_animated_image (MagickWand *super_wand, int ino)
+       PixelWand **source, **dest;
+       size_t source_width, source_height;
+       ssize_t source_left, source_top;
+-      MagickPixelPacket pixel;
++      PixelInfo pixel;
+       DisposeType dispose;
+       ptrdiff_t lines = 0;
+ 
+@@ -8499,7 +8499,7 @@ imagemagick_compute_animated_image (MagickWand *super_wand, int ino)
+ 	      if (dispose == BackgroundDispose || PixelGetAlpha (source[x]))
+ 		{
+ 		  PixelGetMagickColor (source[x], &pixel);
+-		  PixelSetMagickColor (dest[x + source_left], &pixel);
++		  PixelSetPixelColor (dest[x + source_left], &pixel);
+ 		}
+ 	    }
+ 	  PixelSyncIterator (dest_iterator);
+@@ -8546,7 +8546,7 @@ imagemagick_load_image (struct frame *f, struct image *img,
+   MagickWand *image_wand;
+   PixelIterator *iterator;
+   PixelWand **pixels, *bg_wand = NULL;
+-  MagickPixelPacket  pixel;
++  PixelInfo  pixel;
+   Lisp_Object image;
+   Lisp_Object value;
+   Lisp_Object crop;
 diff --git a/src/keyboard.c b/src/keyboard.c
-index 6fa38aa..b4c08b2 100644
+index c0c863f0d3..9a606b8b86 100644
 --- a/src/keyboard.c
 +++ b/src/keyboard.c
-@@ -3857,8 +3857,10 @@ kbd_buffer_get_event (KBOARD **kbp,
-         {
-           if (event->ie.code == KEY_NS_PUT_WORKING_TEXT)
-             obj = list1 (intern ("ns-put-working-text"));
--          else
-+          else if (event->ie.code == KEY_NS_UNPUT_WORKING_TEXT)
-             obj = list1 (intern ("ns-unput-working-text"));
-+	  else if (event->ie.code == KEY_NS_PUT_MARKED_TEXT)
-+	    obj = Fcons (intern ("ns-put-marked-text"), event->ie.arg);
- 	  kbd_fetch_ptr = event + 1;
-           if (used_mouse_menu)
-             *used_mouse_menu = true;
-@@ -11678,6 +11680,8 @@ keys_of_keyboard (void)
+@@ -5469,9 +5469,16 @@ make_lispy_event (struct input_event *event)
+ 
+ #ifdef HAVE_NS
+     case NS_TEXT_EVENT:
+-      return list1 (intern (event->code == KEY_NS_PUT_WORKING_TEXT
+-                            ? "ns-put-working-text"
+-                            : "ns-unput-working-text"));
++      /* return list1 (intern (event->code == KEY_NS_PUT_WORKING_TEXT */
++      /*                       ? "ns-put-working-text" */
++      /*                       : "ns-unput-working-text")); */
++
++      if (event->code == KEY_NS_PUT_WORKING_TEXT)
++	return list1 (intern ("ns-put-working-text"));
++      else if (event->code == KEY_NS_UNPUT_WORKING_TEXT)
++	return list1 (intern ("ns-unput-working-text"));
++      else if (event->code == KEY_NS_PUT_MARKED_TEXT)
++	return Fcons (intern ("ns-put-marked-text"), event->arg);
+ 
+       /* NS_NONKEY_EVENTs are just like NON_ASCII_KEYSTROKE_EVENTs,
+ 	 except that they are non-key events (last-nonmenu-event is nil).  */
+@@ -11915,6 +11922,8 @@ keys_of_keyboard (void)
  			    "ns-put-working-text");
    initial_define_lispy_key (Vspecial_event_map, "ns-unput-working-text",
  			    "ns-unput-working-text");
@@ -710,9 +865,8 @@ index 6fa38aa..b4c08b2 100644
       current-prefix-arg, as is done in `handle-switch-frame'.
       But `handle-switch-frame is not run from the special-map.
 diff --git a/src/macim.m b/src/macim.m
-new file mode 100644
-index 0000000..fa4670b
---- /dev/null
+index e69de29bb2..fa4670b251 100644
+--- a/src/macim.m
 +++ b/src/macim.m
 @@ -0,0 +1,173 @@
 +/* Implementation of Input Method Extension for MacOS X.
@@ -889,20 +1043,12 @@ index 0000000..fa4670b
 +}
 +#endif
 diff --git a/src/nsfns.m b/src/nsfns.m
-index 5fa68c0..8d98c58 100644
+index 9ff7e88a8d..577c703771 100644
 --- a/src/nsfns.m
 +++ b/src/nsfns.m
-@@ -522,7 +522,6 @@ x_set_title (struct frame *f, Lisp_Object name, Lisp_Object old_name)
-   ns_set_name_internal (f, name);
- }
- 
--
- void
- ns_set_name_as_filename (struct frame *f)
- {
-@@ -3136,6 +3135,24 @@ be used as the image of the icon representing the frame.  */);
-                doc: /* Toolkit version for NS Windowing.  */);
-   Vns_version_string = ns_appkit_version_str ();
+@@ -3164,6 +3164,24 @@ - (NSString *)panel: (id)sender userEnteredFilename: (NSString *)filename
+ Default is t.  */);
+   ns_use_proxy_icon = true;
  
 +
 +  DEFVAR_LISP ("ns-shift-key-mask", Vns_shift_key_mask,
@@ -925,7 +1071,7 @@ index 5fa68c0..8d98c58 100644
    defsubr (&Sns_read_file_name);
    defsubr (&Sns_get_resource);
    defsubr (&Sns_set_resource);
-@@ -3180,6 +3197,10 @@ be used as the image of the icon representing the frame.  */);
+@@ -3213,6 +3231,10 @@ - (NSString *)panel: (id)sender userEnteredFilename: (NSString *)filename
    defsubr (&Sx_show_tip);
    defsubr (&Sx_hide_tip);
  
@@ -937,23 +1083,23 @@ index 5fa68c0..8d98c58 100644
    as_script = Qnil;
    as_result = 0;
 diff --git a/src/nsterm.h b/src/nsterm.h
-index 7e6e8ef..64c073b 100644
+index a99b517fd5..ef38e74a6d 100644
 --- a/src/nsterm.h
 +++ b/src/nsterm.h
-@@ -757,6 +757,8 @@ extern EmacsMenu *mainMenu, *svcsMenu, *dockMenu;
+@@ -751,6 +751,8 @@ extern EmacsMenu *svcsMenu;
  #define KEY_NS_NEW_FRAME               ((1<<28)|(0<<16)|12)
  #define KEY_NS_TOGGLE_TOOLBAR          ((1<<28)|(0<<16)|13)
  #define KEY_NS_SHOW_PREFS              ((1<<28)|(0<<16)|14)
 +#define KEY_MAC_CHANGE_INPUT_METHOD    ((1<<28)|(0<<16)|15)
 +#define KEY_NS_PUT_MARKED_TEXT         ((1<<28)|(0<<16)|16)
  
- /* could use list to store these, but rest of emacs has a big infrastructure
-    for managing a table of bitmap "records" */
+ /* Could use list to store these, but rest of emacs has a big infrastructure
+    for managing a table of bitmap "records".  */
 diff --git a/src/nsterm.m b/src/nsterm.m
-index 36e08c6..932e081 100644
+index 3c95fedadc..3a591a91c1 100644
 --- a/src/nsterm.m
 +++ b/src/nsterm.m
-@@ -4665,6 +4665,9 @@ ns_term_init (Lisp_Object display_name)
+@@ -5263,6 +5263,9 @@ Needs to be here because ns_initialize_display_info () uses AppKit classes.
    /*   [[NSNotificationCenter defaultCenter] addObserver: NSApp
                                           selector: @selector (logNotification:)
                                               name: nil object: nil]; */
@@ -963,7 +1109,7 @@ index 36e08c6..932e081 100644
  
    dpyinfo = xzalloc (sizeof *dpyinfo);
  
-@@ -4968,6 +4971,21 @@ ns_term_shutdown (int sig)
+@@ -5566,6 +5569,21 @@ - (void)logNotification: (NSNotification *)notification
      NSLog (@"notification: '%@'", [notification name]);
  }
  
@@ -985,24 +1131,24 @@ index 36e08c6..932e081 100644
  
  - (void)sendEvent: (NSEvent *)theEvent
  /* --------------------------------------------------------------------------
-@@ -5793,7 +5811,8 @@ not_in_argv (NSString *arg)
-              code, fnKeysym, flags, emacs_event->modifiers);
+@@ -6288,7 +6306,8 @@ In that case we use UCKeyTranslate (ns_get_shifted_character)
  
-       /* if it was a function key or had modifiers, pass it directly to emacs */
+       /* If it was a function key or had control-like modifiers, pass
+          it directly to Emacs.  */
 -      if (fnKeysym || (emacs_event->modifiers
 +      if (mac_pass_key_directly_to_emacs ()
 +	  ||fnKeysym || (emacs_event->modifiers
                         && (emacs_event->modifiers != shift_modifier)
                         && [[theEvent charactersIgnoringModifiers] length] > 0))
- /*[[theEvent characters] length] */
-@@ -5808,9 +5827,19 @@ not_in_argv (NSString *arg)
-               ? MULTIBYTE_CHAR_KEYSTROKE_EVENT : ASCII_KEYSTROKE_EVENT;
+         {
+@@ -6316,9 +6335,19 @@ In that case we use UCKeyTranslate (ns_get_shifted_character)
+             }
  
            emacs_event->code = code;
 -          EV_TRAILER (theEvent);
 -          processingCompose = NO;
 -          return;
-+	  /* The function mac_pass_key_to_system decides
++	  /* The function mac_pass_key_to_system decides 
 +	     whether it is passed directly to emacs or not. */
 +	  if (emacs_event->kind == NON_ASCII_KEYSTROKE_EVENT
 +	      || !mac_pass_key_to_system (code, flags
@@ -1018,7 +1164,7 @@ index 36e08c6..932e081 100644
          }
      }
  
-@@ -5906,10 +5935,19 @@ not_in_argv (NSString *arg)
+@@ -6430,10 +6459,19 @@ - (void)setMarkedText: (id)aString selectedRange: (NSRange)selRange
             (unsigned long)selRange.length,
             (unsigned long)selRange.location);
  
@@ -1041,7 +1187,7 @@ index 36e08c6..932e081 100644
  
    if (!emacs_event)
      return;
-@@ -5919,7 +5957,9 @@ not_in_argv (NSString *arg)
+@@ -6443,7 +6481,9 @@ - (void)setMarkedText: (id)aString selectedRange: (NSRange)selRange
    ns_working_text = build_string ([workingText UTF8String]);
  
    emacs_event->kind = NS_TEXT_EVENT;
@@ -1052,26 +1198,26 @@ index 36e08c6..932e081 100644
    EV_TRAILER ((id)nil);
  }
  
-@@ -5982,18 +6022,26 @@ not_in_argv (NSString *arg)
+@@ -6506,18 +6546,26 @@ - (NSRect)firstRectForCharacterRange: (NSRange)theRange
  {
    NSRect rect;
    NSPoint pt;
 -  struct window *win = XWINDOW (FRAME_SELECTED_WINDOW (emacsframe));
-+  // struct window *win = XWINDOW (FRAME_SELECTED_WINDOW (emacsframe));
++  //  struct window *win = XWINDOW (FRAME_SELECTED_WINDOW (emacsframe));
 +  struct window *win;
  
    NSTRACE ("[EmacsView firstRectForCharacterRange:]");
  
    if (NS_KEYLOG)
      NSLog (@"firstRectForCharRange request");
- 
++    
 +  if (NILP (Vmac_in_echo_area))
 +    win = XWINDOW (FRAME_SELECTED_WINDOW (emacsframe));
 +    else if (WINDOWP (echo_area_window))
 +    win = XWINDOW (echo_area_window);
 +  else
 +    win = XWINDOW (FRAME_SELECTED_WINDOW (emacsframe));
-+
+ 
    rect.size.width = theRange.length * FRAME_COLUMN_WIDTH (emacsframe);
    rect.size.height = FRAME_LINE_HEIGHT (emacsframe);
    pt.x = WINDOW_TEXT_TO_FRAME_PIXEL_X (win, win->phys_cursor.x);
@@ -1080,10 +1226,10 @@ index 36e08c6..932e081 100644
 +                                       +FRAME_LINE_HEIGHT (emacsframe)+2);
  
    pt = [self convertPoint: pt toView: nil];
-   pt = [[self window] convertBaseToScreen: pt];
-@@ -8570,6 +8618,10 @@ variable `x-use-underline-position-properties', which is usually at the
- baseline level.  The default value is nil.  */);
+ 
+@@ -9480,6 +9528,10 @@ Nil means use fullscreen the old (< 10.7) way.  The old way works better with
    x_underline_at_descent_line = 0;
+   DEFSYM (Qx_underline_at_descent_line, "x-underline-at-descent-line");
  
 +  DEFVAR_LISP ("mac-in-echo-area", Vmac_in_echo_area,
 +               doc: /* state of cursor in echo area. */);
@@ -1093,7 +1239,7 @@ index 36e08c6..932e081 100644
    Fprovide (Qns, Qnil);
  
 diff --git a/src/termhooks.h b/src/termhooks.h
-index 8bde987..6ee9129 100644
+index 1b2c95e824..ecb15d748e 100644
 --- a/src/termhooks.h
 +++ b/src/termhooks.h
 @@ -59,6 +59,7 @@ enum output_method
